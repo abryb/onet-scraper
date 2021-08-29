@@ -12,10 +12,9 @@ class FoundNewsPrintHandler implements FoundNewsHandlerInterface
      */
     public function handleFoundNews(News $news): void
     {
-        echo json_encode([
-                'imageUrl' => $news->getImageUrl(),
-                'title' => $news->getTitle(),
-                'url' => $news->getUrl()
-            ], JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR) . "\n";
+        echo "---------------\n";
+        echo "News image url : {$news->getImageUrl()} \n";
+        echo "News Tile      : {$news->getTitle()} \n";
+        echo "News Url       : {$news->getUrl()} \n";
     }
 }
