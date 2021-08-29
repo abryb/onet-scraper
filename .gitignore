@@ -1,0 +1,11 @@
+/vendor
+
+# php-cs-fixer
+.php-cs-fixer.cache
+/tools/php-cs-fixer/vendor
+
+# phpunit
+.phpunit.result.cache
+
+# IDE
+.idea

@@ -1,0 +1,7 @@
+version: '3.7'
+services:
+    php:
+        build: .
+        stop_signal: SIGINT
+        volumes:
+            - ./:/usr/src/app:cached
