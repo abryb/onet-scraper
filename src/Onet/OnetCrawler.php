@@ -24,8 +24,12 @@ final class OnetCrawler implements CrawlerInterface
      */
     public function shouldVisit(PageInterface $referringPage, WebUrl $url)
     {
-        if (!preg_match("#\.?onet\.pl$#", $url->getHost())) {
-            // skip not *.onet.pl domains
+        if (!preg_match("#(\.|^)onet\.pl$#", $url->getHost())) {
+            // skip not onet.pl root domain
+            return false;
+        }
+        if (preg_match("#^(zapytaj|kropka|sympatia)\.onet\.pl$#", $url->getHost())) {
+            // avoid pointless subdomains
             return false;
         }
         if (preg_match("#\.(js|css)#", $url->getPath())) {

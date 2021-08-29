@@ -41,7 +41,7 @@ final class App
 
         $crawlerRunner->runCrawler(
             crawler: $crawler,
-            startingUrl: "https://onet.pl"
+            startingUrl: "https://www.onet.pl"
         );
     }
 }
