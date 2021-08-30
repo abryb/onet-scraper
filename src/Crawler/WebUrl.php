@@ -17,8 +17,8 @@ final class WebUrl
         private ?string $host,
         private ?int $port,
         private ?string $path,
-        private ?string $query,
-        private ?string $fragment
+        private ?string $query = null,
+        private ?string $fragment = null,
     ) {
         // replace "//" with "/", it doesn't matter in our context
         $this->path = preg_replace("#//#", "/", $path);
@@ -32,6 +32,19 @@ final class WebUrl
         $parsed = parse_url($url);
         if (false === $parsed) {
             throw new \InvalidArgumentException("Url '$url' is not valid url!");
+        }
+
+        /*
+         * Handle path only parse_url result, eg
+         * parse_url("www.onet.pl") // ['path' => 'wwww.onet.pl']
+         */
+        if (!array_key_exists('host', $parsed) && isset($parsed['path']) && !str_starts_with($parsed['path'], "/")) {
+            $pathParts = explode("/", $parsed['path']);
+            if (str_contains($pathParts[0], ".")) {
+                // if first part of path is like domain e.g
+                $parsed['host'] = array_shift($pathParts);
+            }
+            $parsed['path'] = !empty($pathParts) ? "/".implode("/", $pathParts) : null;
         }
 
         return new WebUrl(
@@ -70,26 +83,6 @@ final class WebUrl
         return $this->toString();
     }
 
-    #[ArrayShape([
-        'scheme' => "null|string",
-        'host' => "null|string",
-        'port' => "int|null",
-        'path' => "null|string",
-        'query' => "null|string",
-        'fragment' => "null|string"
-    ])]
-    public function parts(): array
-    {
-        return [
-            'scheme' => $this->scheme,
-            'host' => $this->host,
-            'port' => $this->port,
-            'path' => $this->path,
-            'query' => $this->query,
-            'fragment' => $this->fragment,
-        ];
-    }
-
     public function getHttpRelativePathRoot(): string
     {
         $relativePathRoot = $this->scheme."://".$this->host;
@@ -99,7 +92,7 @@ final class WebUrl
         }
 
         // relative path /bar from /foo is /bar but from /foo/ it's /foo/bar
-        if (str_ends_with($this->path, "/")) {
+        if ("/" !== $this->path && str_ends_with($this->path, "/")) {
             $relativePathRoot .= $this->path;
         }
 

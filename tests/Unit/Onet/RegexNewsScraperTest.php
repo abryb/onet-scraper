@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @author Błażej Rybarkiewicz <b.rybarkiewicz@gmail.com>
  */
-class NewsScraperTest extends TestCase
+class RegexNewsScraperTest extends TestCase
 {
     public function testCanExtractNews()
     {
